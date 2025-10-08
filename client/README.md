@@ -9,3 +9,5 @@
 5) create routes for home page and blog page.
 
 6) start to style Home page.
+
+7) style the Home page and Blog page.
