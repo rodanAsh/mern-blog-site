@@ -17,3 +17,6 @@ implement MVC architecture;
 create login route for adminlogin using jwt.
 
 create blog model to publish blog.
+   1) create schema and model for Blog.
+   2) create contoller file and define function to add blog.
+   3) use image kit lib to uplload image in cloud storage.
