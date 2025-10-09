@@ -11,3 +11,5 @@
 6) start to style Home page.
 
 7) style the Home page and Blog page.
+
+8) style admin panel
