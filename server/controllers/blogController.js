@@ -1,5 +1,7 @@
 import imagekit from "../configs/imageKit.js";
 import Blog from "../models/Blog.js";
+import fs from 'fs'
+import Comment from "../models/Comment.js";
 
 // add new blog
 export const addBlog = async (req, res) => {
@@ -23,7 +25,7 @@ export const addBlog = async (req, res) => {
 
         // optimization through imagekit URL transformation
         const optimizedImageUrl = imagekit.url({
-            path: response.file,
+            path: response.filePath,
             transformation: [
                 {quality: 'auto'},   // Auto compression
                 {format: 'webp'},    // Conert to modern format
@@ -36,8 +38,11 @@ export const addBlog = async (req, res) => {
         await Blog.create({ title, subTitle, description, category, image, isPublished });
 
         return res.json({ success: true, message: "Blog added successfully" })
+
     } catch (error) {
+
         return res.json({ success: false, message: error.message })
+
     }
 }
 
@@ -87,6 +92,28 @@ export const togglePublish = async(req,res) => {
         await blog.save();
         res.json({ success: true, message: "Blog status updated" })
     } catch(error) {
+        res.json({ success: false, message: error.message })
+    }
+}
+
+export const addComment = async (req, res) => {
+    try {
+        const { blog, name, content } = req.body;
+
+        await Comment.create({ blog, name, content })
+
+        res.json({ success: true, message: "Comment added for review" })
+    } catch (error) {
+        res.json({ success: false, message: error.message })
+    }
+}
+
+export const getBlogComments = async(req, res) => {
+    try {
+        const { blogId } = req.body;
+        const comments = await Comment.find({ blog: blogId, isApproved: true }).sort({ createdAt: -1 });
+        res.json({ success: true, comments })
+    } catch (error) {
         res.json({ success: false, message: error.message })
     }
 }
