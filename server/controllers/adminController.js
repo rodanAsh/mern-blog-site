@@ -39,7 +39,7 @@ export const getAllBlogsAdmin = async (req, res) => {
     }
 }
 
-export const getDashboard = async(req, res) => {
+export const getDashboard = async (req, res) => {
     try {
         const recentBlogs = await Blog.find({}).sort({ createdAt: -1 }).limit(5);
         const blogs = await Blog.countDocuments();
@@ -72,7 +72,7 @@ export const deleteCommentById = async(req, res) => {
         const { id } = req.body;
 
         await Comment.findByIdAndDelete(id);
-        res.json({ success: true, message: error.message })
+        res.json({ success: true, message: "Comment deleted successfully" })
     } catch(error) {
         res.json({ success: false, message: error.message })
     }

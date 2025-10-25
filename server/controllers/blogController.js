@@ -10,7 +10,7 @@ export const addBlog = async (req, res) => {
         const imageFile = req.file;
 
         // check if all fields are present
-        if(!title || !description || !category || !imageFile) {
+        if (!title || !description || !category || !imageFile) {
             return res.json({ success: false, message: "Missing required fields" })
         }
 
@@ -76,6 +76,9 @@ export const deleteBlogById = async (req, res) => {
     try {
         const { id } = req.body;
         await Blog.findByIdAndDelete(id);
+
+        // Delete all comment associated with the blog
+        await Comment.deleteMany({ blog: id });
         res.json({ success: true, message: "Blog deleted successfully" })
     } catch (error) {
         res.json({ success: false, message: error.message });
@@ -90,9 +93,9 @@ export const togglePublish = async(req,res) => {
         blog.isPublished = !blog.isPublished;
 
         await blog.save();
-        res.json({ success: true, message: "Blog status updated" })
+        res.json({ success: true, message: "Blog status updated" });
     } catch(error) {
-        res.json({ success: false, message: error.message })
+        res.json({ success: false, message: error.message });
     }
 }
 
@@ -100,20 +103,29 @@ export const addComment = async (req, res) => {
     try {
         const { blog, name, content } = req.body;
 
-        await Comment.create({ blog, name, content })
+        await Comment.create({ blog, name, content });
 
-        res.json({ success: true, message: "Comment added for review" })
+        res.json({ success: true, message: "Comment added for review" });
     } catch (error) {
-        res.json({ success: false, message: error.message })
+        res.json({ success: false, message: error.message });
     }
 }
 
-export const getBlogComments = async(req, res) => {
+export const getBlogComments = async (req, res) => {
     try {
         const { blogId } = req.body;
         const comments = await Comment.find({ blog: blogId, isApproved: true }).sort({ createdAt: -1 });
-        res.json({ success: true, comments })
+        res.json({ success: true, comments });
     } catch (error) {
-        res.json({ success: false, message: error.message })
+        res.json({ success: false, message: error.message });
     }
 }
+
+
+
+
+
+
+
+
+
